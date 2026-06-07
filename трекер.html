@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>7 дней — трекер привычек</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: radial-gradient(circle at 20% 30%, #0f172a, #030712);
+            font-family: 'Segoe UI', system-ui, 'Inter', monospace;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 550px;
+            width: 100%;
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 25px 40px -10px black;
+        }
+        h1 {
+            font-size: 1.9rem;
+            text-align: center;
+            background: linear-gradient(120deg, #ffe6b0, #d4af37);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .sub {
+            text-align: center;
+            color: #aabbdd;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+        .habit-setup {
+            background: #0a1022cc;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .habit-setup input {
+            background: #010a1a;
+            border: 1px solid #3a5680;
+            padding: 12px 18px;
+            border-radius: 2.5rem;
+            font-size: 1rem;
+            color: white;
+            width: 70%;
+            margin-right: 10px;
+        }
+        .habit-setup button {
+            background: #d4af37;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 1.5rem 0;
+        }
+        .day-card {
+            background: #030b1c;
+            border-radius: 1rem;
+            padding: 10px 4px;
+            text-align: center;
+            border: 1px solid #2e4670;
+            transition: 0.1s;
+        }
+        .day-name {
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #ffdeaa;
+        }
+        .day-check {
+            font-size: 1.8rem;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .completed .day-check {
+            color: #88ff88;
+            text-shadow: 0 0 4px #00aa44;
+        }
+        .reward {
+            background: #1f2a48cc;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 1rem;
+            border: 1px solid #ffcd7e;
+        }
+        .reset-btn {
+            background: #2e3b4e;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #6f87aa;
+        }
+        @media (max-width: 500px) {
+            .container { padding: 1rem; }
+            .day-name { font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⚡7 ДНЕЙ⚡</h1>
+    <div class="sub">выбери привычку и побеждай каждый день</div>
+
+    <div class="habit-setup" id="habitSetup">
+        <input type="text" id="habitName" placeholder="например: учить код 20 минут" autocomplete="off">
+        <button id="startHabitBtn">🏆 Начать челлендж</button>
+    </div>
+
+    <div id="trackerArea" style="display: none;">
+        <div style="text-align:center; font-size:1.3rem; font-weight:bold;" id="currentHabitDisplay"></div>
+        <div class="week-grid" id="weekGrid"></div>
+        <div class="reward" id="rewardBlock">
+            ⭐ Заверши 7 дней — получишь крутую фразу!
+        </div>
+        <button id="resetHabitBtn" class="reset-btn">🔄 Сбросить привычку</button>
+    </div>
+    <footer>прогресс сохраняется в телефоне</footer>
+</div>
+
+<script>
+    let currentHabit = "";
+    let days = [false, false, false, false, false, false, false];
+    const dayNames = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
+
+    function saveToLocal() {
+        const data = {
+            habit: currentHabit,
+            days: days
+        };
+        localStorage.setItem("damir_habit_tracker", JSON.stringify(data));
+    }
+
+    function loadFromLocal() {
+        const saved = localStorage.getItem("damir_habit_tracker");
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                currentHabit = data.habit || "";
+                days = data.days || [false, false, false, false, false, false, false];
+            } catch(e) { console.log(e); }
+        }
+        if (currentHabit !== "") {
+            document.getElementById("habitSetup").style.display = "none";
+            document.getElementById("trackerArea").style.display = "block";
+            updateUI();
+        } else {
+            document.getElementById("habitSetup").style.display = "block";
+            document.getElementById("trackerArea").style.display = "none";
+        }
+    }
+
+    function updateUI() {
+        document.getElementById("currentHabitDisplay").innerHTML = `🎯 ${escapeHtml(currentHabit)}`;
+        const container = document.getElementById("weekGrid");
+        container.innerHTML = "";
+        for (let i = 0; i < 7; i++) {
+            const div = document.createElement("div");
+            div.className = "day-card";
+            if (days[i]) div.classList.add("completed");
+            div.innerHTML = `
+                <div class="day-name">${dayNames[i]}</div>
+                <div class="day-check" data-day="${i}">${days[i] ? "✅" : "⬜"}</div>
+            `;
+            container.appendChild(div);
+        }
+        // вешаем обработчики нажатия
+        document.querySelectorAll(".day-check").forEach(el => {
+            el.addEventListener("click", (e) => {
+                const dayIdx = parseInt(el.getAttribute("data-day"));
+                if (!isNaN(dayIdx)) {
+                    days[dayIdx] = !days[dayIdx];
+                    saveToLocal();
+                    updateUI();
+                    checkReward();
+                }
+                e.stopPropagation();
+            });
+        });
+        checkReward();
+    }
+
+    function checkReward() {
+        const allCompleted = days.every(v => v === true);
+        const rewardDiv = document.getElementById("rewardBlock");
+        if (allCompleted && currentHabit !== "") {
+            rewardDiv.innerHTML = "🏆 ТЫ КРАСАВЧИК! 🏆 <br> 7 дней — это мощь. Ты — машина!";
+            rewardDiv.style.background = "#d4af37";
+            rewardDiv.style.color = "#0a0f1f";
+        } else {
+            rewardDiv.innerHTML = "⭐ Заверши 7 дней — получишь крутую фразу!";
+            rewardDiv.style.background = "#1f2a48cc";
+            rewardDiv.style.color = "#ffdeaa";
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    document.getElementById("startHabitBtn").addEventListener("click", () => {
+        const habitInput = document.getElementById("habitName");
+        const habit = habitInput.value.trim();
+        if (habit === "") {
+            alert("Напиши, какую привычку будешь выполнять 7 дней");
+            return;
+        }
+        currentHabit = habit;
+        days = [false, false, false, false, false, false, false];
+        saveToLocal();
+        document.getElementById("habitSetup").style.display = "none";
+        document.getElementById("trackerArea").style.display = "block";
+        updateUI();
+    });
+
+    document.getElementById("resetHabitBtn").addEventListener("click", () => {
+        if (confirm("Сбросить привычку? Весь прогресс удалится.")) {
+            currentHabit = "";
+            days = [false, false, false, false, false, false, false];
+            localStorage.removeItem("damir_habit_tracker");
+            document.getElementById("habitSetup").style.display = "block";
+            document.getElementById("trackerArea").style.display = "none";
+            document.getElementById("habitName").value = "";
+        }
+    });
+
+    loadFromLocal();
+</script>
+</body>
+</html>

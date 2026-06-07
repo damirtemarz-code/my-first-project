@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дамир Темурзиев | Веб-разработчик | Портфолио</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1a 0%, #0f172a 50%, #1e1b2e 100%);
+            font-family: 'Segoe UI', system-ui, 'Inter', 'Poppins', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            padding: 2rem;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* карточка профиля с эффектом стекла и свечения */
+        .profile-card {
+            background: rgba(15, 25, 45, 0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 3rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 100, 0.1) inset;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .profile-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            background: linear-gradient(145deg, #2a3d6e, #141c38);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 3px #ffd966, 0 0 0 6px rgba(255, 217, 102, 0.3);
+            transition: all 0.3s ease;
+            animation: floatAvatar 3s ease-in-out infinite;
+        }
+
+        @keyframes floatAvatar {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .info h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(120deg, #ffe6b0, #d4af37, #ffc857);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .info p {
+            font-size: 1.25rem;
+            color: #cbd5ff;
+            margin-top: 8px;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 10px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #1e2b48, #152238);
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid #3f5690;
+            transition: all 0.2s;
+        }
+
+        .section {
+            background: rgba(8, 14, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(68, 98, 160, 0.3);
+            transition: all 0.3s;
+        }
+
+        .section h2 {
+            font-size: 1.9rem;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #ffcd7e;
+            padding-left: 1rem;
+            background: linear-gradient(90deg, #fff5e0, transparent);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .skill {
+            background: linear-gradient(145deg, #0e172c, #0a1123);
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: 1px solid #2e4a77;
+            transition: all 0.2s;
+        }
+
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-top: 1rem;
+        }
+
+        .project-card {
+            background: linear-gradient(145deg, #0f182e, #0b1224);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(68, 98, 160, 0.3);
+        }
+
+        .project-card h3 {
+            font-size: 1.55rem;
+            margin-bottom: 0.8rem;
+            color: #ffdeaa;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(95deg, #d4af37, #ffcd6b);
+            color: #0a0f1f;
+            font-weight: bold;
+            padding: 10px 26px;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: all 0.25s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .contacts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1.2rem;
+        }
+
+        .contact-item {
+            background: rgba(26, 37, 63, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 12px 26px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: 1px solid #3f5690;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.8;
+            font-size: 0.85rem;
+            padding: 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        @media (max-width: 650px) {
+            body { padding: 1rem; }
+            .info h1 { font-size: 1.9rem; }
+            .avatar { width: 90px; height: 90px; font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar">🚀</div>
+            <div class="info">
+                <h1>ДАМИР ТЕМУРЗИЕВ</h1>
+                <p>⭐ веб-разработчик | создатель Skymipe | 10 лет, а уже в деле</p>
+                <div class="badges">
+                    <span class="badge">🛒 Skymipe Market</span>
+                    <span class="badge">🎮 2D Лабиринт</span>
+                    <span class="badge">🤖 Geometry Dash</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📌 Обо мне</h2>
+        <p>Я из Ингушетии, село Троицкое. С 10 лет создаю сайты и игры. Мечтаю стать топ-разработчиком в Москве. Обожаю считать бюджеты и строить планы. Владею HTML/CSS/JS.</p>
+    </div>
+
+    <div class="section">
+        <h2>🛠️ Навыки</h2>
+        <div class="skills">
+            <span class="skill">HTML5 & CSS3</span>
+            <span class="skill">JavaScript</span>
+            <span class="skill">Адаптивная вёрстка</span>
+            <span class="skill">Git / GitHub</span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Проекты</h2>
+        <div class="project-list">
+            <div class="project-card">
+                <h3>🛸 Skymipe</h3>
+                <p>Интернет-магазин с корзиной, профилем и сохранением данных.</p>
+                <a href="https://skymipe.netlify.app" target="_blank" class="btn">Смотреть →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📞 Контакты</h2>
+        <div class="contacts">
+            <div class="contact-item">📧 damir@skymipe.com</div>
+            <div class="contact-item">🌐 skymipe.netlify.app</div>
+        </div>
+    </div>
+    <footer>© 2026 Дамир Темурзиев</footer>
+</div>
+</body>
+</html>

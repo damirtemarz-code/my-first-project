@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Дамир | Кастрюли — прикол и стиль</title>
+  <!-- Красивый шрифт и базовые стили -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #fef7e8 0%, #fff2e0 100%);
+      font-family: 'Inter', sans-serif;
+      color: #2c2418;
+      scroll-behavior: smooth;
+    }
+
+    /* контейнер для всего контента */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem 2rem;
+    }
+
+    /* шапка с Дамиром */
+    .hero {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c97e3a, #e09d5e, #b45f2b);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.01em;
+      text-shadow: 4px 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero .tagline {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #bc7a3e;
+      background: rgba(255,245,230,0.8);
+      display: inline-block;
+      padding: 0.3rem 1.2rem;
+      border-radius: 60px;
+      backdrop-filter: blur(2px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    /* плашки с атмосферой */
+    .vibe-card {
+      background: rgba(255, 248, 235, 0.8);
+      backdrop-filter: blur(1px);
+      border-radius: 48px;
+      padding: 1.2rem 2rem;
+      margin: 2rem 0 2.5rem 0;
+      text-align: center;
+      border: 1px solid rgba(224, 170, 110, 0.3);
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.08);
+    }
+
+    .vibe-card p {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #7b4a2a;
+    }
+
+    /* сетка с кастрюлями — красиво и прикольно */
+    .pots-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin: 2.5rem 0 3rem;
+    }
+
+    .pot-item {
+      background: #ffffffdd;
+      backdrop-filter: blur(2px);
+      border-radius: 40px;
+      padding: 1.8rem 1.5rem 1.8rem 1.5rem;
+      width: 260px;
+      text-align: center;
+      transition: all 0.25s ease;
+      border: 1px solid #ffe1b9;
+      box-shadow: 0 20px 30px -12px rgba(101, 58, 24, 0.12);
+    }
+
+    .pot-item:hover {
+      transform: translateY(-6px);
+      background: #fffaf2;
+      border-color: #e1b27c;
+      box-shadow: 0 28px 34px -12px rgba(87, 54, 26, 0.2);
+    }
+
+    .pot-icon {
+      font-size: 4.8rem;
+      display: inline-block;
+      margin-bottom: 0.8rem;
+    }
+
+    .pot-title {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: linear-gradient(120deg, #a75926, #d48948);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin: 0.3rem 0 0.5rem;
+    }
+
+    .pot-desc {
+      font-size: 0.9rem;
+      color: #6f4c2c;
+      font-weight: 500;
+      border-top: 1px dashed #efcfaa;
+      padding-top: 0.6rem;
+      margin-top: 0.4rem;
+    }
+
+    /* секция для вставки фото снизу — чистое поле */
+    .photo-zone {
+      margin: 4rem 0 2rem;
+      text-align: center;
+    }
+
+    .photo-zone h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #c28141;
+      letter-spacing: -0.3px;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #f7e9db;
+      padding: 0.3rem 1.5rem;
+      border-radius: 60px;
+    }
+
+    .photo-zone h3 span {
+      font-size: 1.8rem;
+    }
+
+    .photo-gallery {
+      background: #f9efE2;
+      border-radius: 48px;
+      padding: 2rem 1.5rem;
+      margin-top: 1rem;
+      border: 2px dashed #e4bc8b;
+      transition: all 0.2s;
+    }
+
+    /* подсказка для Дамира */
+    .instruction-note {
+      font-size: 0.9rem;
+      background: #fff0e0;
+      border-radius: 80px;
+      padding: 0.5rem 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 1rem;
+      color: #a35f2a;
+      font-weight: 500;
+    }
+
+    /* кнопочка-прикол */
+    .fun-button {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .magic-btn {
+      background: #ebc192;
+      border: none;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      color: #402a18;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .magic-btn:hover {
+      background: #ddac74;
+      transform: scale(0.97);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* футер и адаптив */
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #f0dbbc;
+      color: #ad875c;
+      font-weight: 500;
+    }
+
+    @media (max-width: 700px) {
+      .page {
+        padding: 1.2rem;
+      }
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      .pot-item {
+        width: 220px;
+        padding: 1.2rem;
+      }
+      .pot-title {
+        font-size: 1.4rem;
+      }
+      .photo-gallery {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- Главный заголовок: Я Дамир -->
+  <div class="hero">
+    <h1>🍲 Дамир & Кастрюли 🍳</h1>
+    <div class="tagline">прикол · стиль · пробую кастрюли</div>
+  </div>
+
+  <!-- атмосферный блок -->
+  <div class="vibe-card">
+    <p>✨ «Кастрюли — это не только про еду, это про настроение» ✨</p>
+    <p style="font-size:0.95rem; margin-top: 0.5rem;">👇 листай вниз, вставляй свои фотки 👇</p>
+  </div>
+
+  <!-- красивые плитки с кастрюлями (прикольный визуал) -->
+  <div class="pots-grid">
+    <div class="pot-item">
+      <div class="pot-icon">🍲</div>
+      <div class="pot-title">Чугунная легенда</div>
+      <div class="pot-desc">тяжелая, мощная — держит жар</div>
+    </div>
+    <div class="pot-item">
+      <div class="pot-icon">🥘</div>
+      <div class="pot-title">Сотейник-мастер</div>
+      <div class="pot-desc">для ризотто и дерзких экспериментов</div>
+    </div>
+    <div class="pot-item">
+      <div class="pot-icon">🍜</div>
+      <div class="pot-title">Кастрюля-радуга</div>
+      <div class="pot-desc">эмаль, цвета и позитив</div>
+    </div>
+    <div class="pot-item">
+      <div class="pot-icon">🔥</div>
+      <div class="pot-title">Вок-стихия</div>
+      <div class="pot-desc">быстро, громко, по-приколу</div>
+    </div>
+  </div>
+
+  <!-- блок с псевдо-тестом кастрюль (чисто для прикола) -->
+  <div class="fun-button">
+    <button class="magic-btn" id="randomPotBtn">🔮 Попробовать случайную кастрюлю 🔮</button>
+    <p style="font-size: 0.75rem; margin-top: 0.6rem; color:#b57d48;">*нажми — получишь совет по кастрюле дня</p>
+  </div>
+
+  <!-- место для твоих фоток! без полей ввода — чистый блок -->
+  <div class="photo-zone">
+    <h3>
+      <span>📸</span> Дамир вставляет свои фото <span>👇</span>
+    </h3>
+    <div class="photo-gallery" id="photoGalleryBlock">
+      <!-- тут пусто. ты сам снизу вставишь картинки — можешь добавлять прямо сюда в HTML-коде или через папку -->
+      <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; align-items: center; min-height: 140px;">
+        <!-- 
+          ⬇⬇⬇ ДАМИР, СЮДА ВСТАВЛЯЙ СВОИ ФОТКИ ⬇⬇⬇ 
+          Пример:
+          <img src="моя_кастрюля1.jpg" alt="моя крутая кастрюля" style="max-width:200px; border-radius:32px; box-shadow: 0 8px 18px rgba(0,0,0,0.1);">
+          <img src="прикол_с_кастрюлей.jpg" alt="эксперимент" style="max-width:200px; border-radius:32px;">
+          можно просто вставлять строки с img, можешь хоть 10 штук
+          также можешь добавить видео или гифки — всё будет красиво!
+        -->
+        <div style="background:#eddccb; border-radius: 40px; padding: 1rem 1.5rem; text-align: center; color:#9b673d;">
+          ⭐ Твои кастрюльные фото будут тут ⭐<br>
+          <span style="font-size: 0.8rem;">(просто замени этот блок на свои картинки &lt;img&gt;)</span>
+        </div>
+      </div>
+    </div>
+    <div class="instruction-note">
+      <span>🖼️</span> Дамир, копируй строчки с <strong>&lt;img&gt;</strong> и вставляй прямо в блок выше <span>🖼️</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    🔥 пробовать кастрюли — весело 🔥  ·  проект от Дамира, 10/10  ·  экспериментируй со стилем!
+  </div>
+</div>
+
+<!-- маленький скрипт для кнопки-прикола и легкой интерактивности -->
+<script>
+  (function() {
+    // массив с прикольными фразами про кастрюли
+    const potReviews = [
+      "🥘 Ого! Чугунная кастрюля зазвучала басом — мощь!",
+      "🍲 Алюминиевая легкая, но так и просит сварить супчик.",
+      "🔥 Сковорода-кастрюля гибрид! Жарит и варит одновременно!",
+      "🍜 Эмалированная радуга — попробовал, вкус стал ярче!",
+      "🥣 Керамическая кастрюля — чувствуется нежность.",
+      "🍳 Старая добрая кастрюля из бабушкиной коллекции — вау-эффект.",
+      "🧑‍🍳 Дамир пробует кастрюлю на звук: «Дзынь!» — отличный резонанс.",
+      "✨ Антипригарное покрытие — магия, ничего не прилипает!"
+    ];
+
+    const randomBtn = document.getElementById('randomPotBtn');
+    if (randomBtn) {
+      randomBtn.addEventListener('click', function() {
+        const randomIndex = Math.floor(Math.random() * potReviews.length);
+        const message = potReviews[randomIndex];
+        // создадим всплывающее уведомление в стиле тост, но красивое и ненавязчивое
+        const toast = document.createElement('div');
+        toast.innerText = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '30px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = '#2b241cee';
+        toast.style.backdropFilter = 'blur(8px)';
+        toast.style.color = '#fae7cf';
+        toast.style.padding = '0.9rem 1.8rem';
+        toast.style.borderRadius = '60px';
+        toast.style.fontWeight = '600';
+        toast.style.fontSize = '1rem';
+        toast.style.fontFamily = 'Inter, sans-serif';
+        toast.style.boxShadow = '0 12px 25px rgba(0,0,0,0.2)';
+        toast.style.zIndex = '1000';
+        toast.style.border = '1px solid #e7b87a';
+        toast.style.letterSpacing = '0.3px';
+        document.body.appendChild(toast);
+        // через 2.5 секунды плавно исчезает
+        setTimeout(() => {
+          toast.style.transition = 'opacity 0.4s ease';
+          toast.style.opacity = '0';
+          setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, 500);
+        }, 2500);
+      });
+    }
+
+    // Дополнительно: легкая динамика для фото-зоны (просто дружелюбный эффект)
+    const galleryBlock = document.getElementById('photoGalleryBlock');
+    if (galleryBlock) {
+      // сделаем так, чтобы при наведении на зону фото был приятный glow
+      galleryBlock.addEventListener('mouseenter', () => {
+        galleryBlock.style.transition = '0.2s';
+        galleryBlock.style.boxShadow = '0 0 0 3px #f2cfaa, 0 12px 24px -8px rgba(0,0,0,0.1)';
+      });
+      galleryBlock.addEventListener('mouseleave', () => {
+        galleryBlock.style.boxShadow = 'none';
+      });
+    }
+  })();
+</script>
+
+<!-- ДАМИР, ВНИМАНИЕ! Это твой блок для фото. 
+     Просто найди в коде комментарий "Твои кастрюльные фото будут тут"
+     и замени текст-заглушку на теги <img>.
+     Можешь вставить много картинок в ряд. Всё уже стилизовано красиво!
+     Никаких окошек ввода — чистый HTML. Удачи, краш-тестируй кастрюли!
+-->
+</body>
+</html>

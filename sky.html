@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Geometry Dash — Дамир</title>
+    <style>
+        body { background: #0a0f1e; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: monospace; margin: 0; padding: 20px; }
+        canvas { background: #1a2a4f; border-radius: 20px; box-shadow: 0 0 0 3px gold; cursor: pointer; }
+        .info { text-align: center; margin-top: 15px; color: gold; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <div class="info">🏆 СЧЕТ: <span id="scoreValue">0</span> &nbsp;| 🎮 КЛИК ИЛИ ПРОБЕЛ</div>
+</div>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const scoreSpan = document.getElementById("scoreValue");
+    const GRAVITY = 0.8, JUMP_POWER = -11, GROUND_Y = 320;
+    let gameRunning = true, score = 0;
+    let player = { x: 120, y: GROUND_Y - 40, width: 32, height: 32, vy: 0, grounded: true };
+    let obstacles = [];
+    function spawnObstacle() {
+        if (!gameRunning) return;
+        obstacles.push({ x: canvas.width, width: 28, height: 35, passed: false });
+        setTimeout(spawnObstacle, 1200 + Math.random() * 1000);
+    }
+    function jump() {
+        if (!gameRunning) { resetGame(); return; }
+        if (player.grounded) { player.vy = JUMP_POWER; player.grounded = false; }
+    }
+    function resetGame() {
+        gameRunning = true; score = 0; scoreSpan.innerText = score; obstacles = [];
+        player.y = GROUND_Y - player.height; player.vy = 0; player.grounded = true;
+    }
+    function updateGame() {
+        if (!gameRunning) return;
+        player.vy += GRAVITY; player.y += player.vy;
+        if (player.y >= GROUND_Y - player.height) { player.y = GROUND_Y - player.height; player.vy = 0; player.grounded = true; }
+        for (let i = 0; i < obstacles.length; i++) {
+            obstacles[i].x -= 6;
+            if (!obstacles[i].passed && obstacles[i].x + obstacles[i].width < player.x) { obstacles[i].passed = true; score++; scoreSpan.innerText = score; }
+        }
+        obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+        for (let obs of obstacles) {
+            if (player.x < obs.x + obs.width && player.x + player.width > obs.x && player.y < GROUND_Y && player.y + player.height > GROUND_Y - obs.height) gameRunning = false;
+        }
+    }
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#2c3e66"; ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
+        ctx.fillStyle = "#d4af37"; ctx.fillRect(0, GROUND_Y, canvas.width, 4);
+        for (let obs of obstacles) { ctx.fillStyle = "#ff3355"; ctx.beginPath(); ctx.moveTo(obs.x, GROUND_Y); ctx.lineTo(obs.x + obs.width/2, GROUND_Y - obs.height); ctx.lineTo(obs.x + obs.width, GROUND_Y); ctx.fill(); }
+        ctx.fillStyle = "#ffbb44"; ctx.fillRect(player.x, player.y, player.width, player.height);
+        ctx.fillStyle = "#000"; ctx.fillRect(player.x + 8, player.y + 8, 6, 6); ctx.fillRect(player.x + player.width - 14, player.y + 8, 6, 6);
+        if (!gameRunning) { ctx.font = "bold 26px monospace"; ctx.fillStyle = "#ffcc66"; ctx.fillText("GAME OVER", canvas.width/2-110, canvas.height/2-40); }
+    }
+    window.addEventListener("keydown", (e) => { if (e.code === "Space") { e.preventDefault(); jump(); } });
+    canvas.addEventListener("click", jump); canvas.addEventListener("touchstart", jump);
+    spawnObstacle();
+    function gameLoop() { updateGame(); draw(); requestAnimationFrame(gameLoop); }
+    gameLoop();
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабиринт — найди сокровище</title>
+    <style>
+        body {
+            background: #0a0f1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+        }
+        canvas {
+            background: #1e2a3a;
+            border-radius: 24px;
+            box-shadow: 0 0 0 3px #d4af37;
+        }
+        .info {
+            text-align: center;
+            margin-top: 15px;
+            color: #ffd966;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <div class="info">🏆 Иди к золотому сундуку (стрелки WASD или ←↑↓→)</div>
+</div>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const size = 10;
+    const cell = canvas.width / size;
+
+    // карта лабиринта (1 - стена, 0 - проход)
+    const maze = [
+        [1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,0,1],
+        [1,0,1,0,1,0,1,0,0,1],
+        [1,0,1,0,0,0,1,1,0,1],
+        [1,0,0,0,1,0,0,0,0,1],
+        [1,0,1,1,1,0,1,0,0,1],
+        [1,0,0,0,0,0,1,0,0,1],
+        [1,1,1,0,1,0,1,0,0,1],
+        [1,0,0,0,1,0,0,0,9,1],
+        [1,1,1,1,1,1,1,1,1,1]
+    ];
+
+    let player = { x: 1, y: 1 };
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (maze[i][j] === 1) {
+                    ctx.fillStyle = "#2c3e66";
+                    ctx.fillRect(j * cell, i * cell, cell, cell);
+                } else if (maze[i][j] === 9) {
+                    ctx.fillStyle = "#ffd966";
+                    ctx.fillRect(j * cell, i * cell, cell, cell);
+                    ctx.fillStyle = "#b87c00";
+                    ctx.font = `${cell * 0.5}px monospace`;
+                    ctx.fillText("💰", j * cell + cell * 0.25, i * cell + cell * 0.8);
+                } else {
+                    ctx.fillStyle = "#0f172a";
+                    ctx.fillRect(j * cell, i * cell, cell, cell);
+                }
+            }
+        }
+        ctx.fillStyle = "#ffaa44";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(player.x * cell + cell / 2, player.y * cell + cell / 2, cell * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+
+    function move(dx, dy) {
+        let nx = player.x + dx;
+        let ny = player.y + dy;
+        if (maze[ny][nx] !== 1) {
+            player.x = nx;
+            player.y = ny;
+        }
+        if (maze[player.y][player.x] === 9) {
+            alert("🎉 ТЫ НАШЁЛ СОКРОВИЩЕ! ПОБЕДА! 🎉");
+            resetGame();
+        }
+        draw();
+    }
+
+    function resetGame() {
+        player.x = 1;
+        player.y = 1;
+        draw();
+    }
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") move(1, 0);
+        if (e.key === "ArrowLeft") move(-1, 0);
+        if (e.key === "ArrowUp") move(0, -1);
+        if (e.key === "ArrowDown") move(0, 1);
+        if (e.key === "r" || e.key === "R") resetGame();
+    });
+
+    draw();
+</script>
+</body>
+</html>

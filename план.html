@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Дамир-лист | Планировщик задач</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: radial-gradient(circle at 20% 30%, #0f172a, #030712);
+            font-family: 'Segoe UI', system-ui, 'Inter', monospace;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .task-container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            padding: 1.6rem;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 25px 40px -10px black;
+        }
+        h1 {
+            font-size: 1.9rem;
+            text-align: center;
+            background: linear-gradient(120deg, #ffe6b0, #d4af37);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        .add-task {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.8rem;
+        }
+        .add-task input {
+            flex: 2;
+            background: #010a1a;
+            border: 1px solid #3a5680;
+            padding: 12px 18px;
+            border-radius: 3rem;
+            font-size: 1rem;
+            color: white;
+        }
+        .priority-select {
+            background: #010a1a;
+            border: 1px solid #ffcd7e;
+            padding: 0 12px;
+            border-radius: 2rem;
+            color: #ffdfaa;
+            font-weight: bold;
+        }
+        .add-btn {
+            background: #d4af37;
+            border: none;
+            padding: 0 24px;
+            border-radius: 3rem;
+            font-weight: bold;
+            color: #0a0f1f;
+            cursor: pointer;
+            transition: 0.1s linear;
+        }
+        .stats {
+            background: #00000055;
+            border-radius: 2rem;
+            padding: 10px 15px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            color: #ffeaae;
+            border: 1px solid #5f7bbf;
+        }
+        .task-list {
+            list-style: none;
+            margin-bottom: 1.8rem;
+        }
+        .task-item {
+            background: #0c1430cc;
+            margin: 10px 0;
+            padding: 12px 15px;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(4px);
+            border: 1px solid #2e4670;
+        }
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .task-text {
+            font-size: 1rem;
+            font-weight: 500;
+            word-break: break-word;
+            max-width: 220px;
+        }
+        .completed .task-text {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        .priority-badge {
+            font-size: 0.75rem;
+            background: #1f2a48;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-weight: bold;
+        }
+        .priority-fire { color: #ff884d; }
+        .priority-bolt { color: #ffdd55; }
+        .priority-check { color: #88ff88; }
+        .task-actions button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 0 4px;
+        }
+        .delete-btn { color: #ff8866; }
+        .reset-btn {
+            background: #2e3b4e;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #6f87aa;
+        }
+        @media (max-width: 500px) {
+            .task-container { padding: 1rem; }
+            .task-info { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+<div class="task-container">
+    <h1>📋 ДАМИР-ЛИСТ</h1>
+
+    <div class="add-task">
+        <input type="text" id="taskName" placeholder="Что нужно сделать? (например: купить ноутбук)" autocomplete="off">
+        <select id="taskPriority" class="priority-select">
+            <option value="🔥">🔥 Высокий</option>
+            <option value="⚡">⚡ Средний</option>
+            <option value="✅">✅ Низкий</option>
+        </select>
+        <button id="addTaskBtn" class="add-btn">➕ Добавить</button>
+    </div>
+
+    <div class="stats">
+        <span>📌 Всего задач: <span id="totalTasks">0</span></span>
+        <span>✅ Выполнено: <span id="completedTasks">0</span></span>
+    </div>
+
+    <ul class="task-list" id="taskList"></ul>
+
+    <button id="resetTasksBtn" class="reset-btn">♻️ Очистить все задачи</button>
+    <footer>задачи сохраняются в телефоне</footer>
+</div>
+
+<script>
+    let tasks = [];
+
+    function loadTasks() {
+        const saved = localStorage.getItem("damir_tasks");
+        if (saved) tasks = JSON.parse(saved);
+        else tasks = [];
+        renderTasks();
+    }
+
+    function saveTasks() {
+        localStorage.setItem("damir_tasks", JSON.stringify(tasks));
+        updateStats();
+    }
+
+    function updateStats() {
+        document.getElementById("totalTasks").innerText = tasks.length;
+        const completedCount = tasks.filter(t => t.completed).length;
+        document.getElementById("completedTasks").innerText = completedCount;
+    }
+
+    function renderTasks() {
+        const container = document.getElementById("taskList");
+        if (tasks.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:20px; color:#aaa;">✨ Добавь первую задачу, Дамир ✨</div>`;
+            updateStats();
+            return;
+        }
+
+        let html = "";
+        for (let i = 0; i < tasks.length; i++) {
+            const task = tasks[i];
+            let priorityClass = "";
+            if (task.priority === "🔥") priorityClass = "priority-fire";
+            else if (task.priority === "⚡") priorityClass = "priority-bolt";
+            else priorityClass = "priority-check";
+            html += `
+                <li class="task-item ${task.completed ? 'completed' : ''}">
+                    <div class="task-info">
+                        <span class="priority-badge ${priorityClass}">${task.priority}</span>
+                        <span class="task-text">${escapeHtml(task.text)}</span>
+                    </div>
+                    <div class="task-actions">
+                        <button class="complete-btn" data-index="${i}" title="Выполнить/вернуть">✔️</button>
+                        <button class="delete-btn" data-index="${i}" title="Удалить">🗑️</button>
+                    </div>
+                </li>
+            `;
+        }
+        container.innerHTML = html;
+        updateStats();
+
+        // обработчики
+        document.querySelectorAll('.complete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                tasks[idx].completed = !tasks[idx].completed;
+                saveTasks();
+                renderTasks();
+            });
+        });
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.getAttribute('data-index'));
+                tasks.splice(idx, 1);
+                saveTasks();
+                renderTasks();
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Добавление задачи
+    document.getElementById("addTaskBtn").addEventListener("click", () => {
+        const nameInput = document.getElementById("taskName");
+        const text = nameInput.value.trim();
+        if (text === "") {
+            alert("Напиши задачу!");
+            return;
+        }
+        const priority = document.getElementById("taskPriority").value;
+        tasks.push({
+            text: text,
+            priority: priority,
+            completed: false
+        });
+        saveTasks();
+        renderTasks();
+        nameInput.value = "";
+        nameInput.focus();
+    });
+
+    // Очистка всех задач
+    document.getElementById("resetTasksBtn").addEventListener("click", () => {
+        if (confirm("Удалить все задачи? Их нельзя будет восстановить.")) {
+            tasks = [];
+            saveTasks();
+            renderTasks();
+        }
+    });
+
+    loadTasks();
+</script>
+</body>
+</html>
