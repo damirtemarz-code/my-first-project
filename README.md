@@ -9,5 +9,4 @@
 - 📋 **Планировщик задач** – to-do лист
 - и другие проекты
 
-Все проекты можно посмотреть вживую по ссылкам (добавлю позже).
-и вот последняя ссылка на мой самый большой сайт :stirring-marshmallow-a0a263.netlify.app
+Все проекты можно посмотреть вживую по ссылкам:tangerine-boba-353dee.netlify.app,statuesque-sprinkles-fd393c.netlify.app,wonderful-mousse-f9f63e.netlify.app,marvelous-chebakia-a3c67e.netlify.app,candid-mandazi-b7a933.netlify.app,stirring-marshmallow-a0a263.netlify.appвот последняя ссылка на мой самый большой сайт :stirring-marshmallow-a0a263.netlify.app вот все мои ссылки
