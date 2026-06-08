@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Skymipe | Космическое резюме (PDF работает)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            padding: 1rem;
+            min-height: 100vh;
+        }
+        .space-card {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(10, 20, 40, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 3rem;
+            padding: 2rem;
+            border: 1px solid rgba(70, 130, 200, 0.4);
+        }
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #c0e0ff, #4a7cbb);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            text-align: center;
+            color: #8aa9cc;
+            margin-bottom: 2rem;
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .form-area, .preview-area {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(70, 130, 200, 0.3);
+        }
+        .form-row {
+            margin-bottom: 1rem;
+        }
+        label {
+            font-weight: 600;
+            color: #c0e0ff;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 1.5rem;
+            border: none;
+            background: #0a1222;
+            color: white;
+            border: 1px solid #2a4a7a;
+        }
+        button {
+            background: #1e3a5f;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            color: white;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background: #2a5a8a;
+            transform: scale(1.01);
+        }
+        .preview-card {
+            background: #0a1020;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            min-height: 500px;
+            color: #e0eefe;
+            border: 1px solid #2a4a7a;
+        }
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 0.8rem auto;
+            border: 2px solid #4a7cbb;
+            display: block;
+        }
+        hr {
+            margin: 0.7rem 0;
+            border-color: #2a4a7a;
+        }
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="space-card">
+    <h1>🛸 КОСМИЧЕСКОЕ РЕЗЮМЕ</h1>
+    <div class="sub">Skymipe — твой билет в космос</div>
+
+    <div class="two-col">
+        <div class="form-area">
+            <div class="form-row"><label>👨‍🚀 ФИО *</label><input type="text" id="fullName" placeholder="Темурзиев Дамир"></div>
+            <div class="form-row"><label>🎯 Должность *</label><input type="text" id="jobTitle" placeholder="Веб-разработчик"></div>
+            <div class="form-row"><label>📚 Образование</label><input type="text" id="education" placeholder="Колледж, 2029"></div>
+            <div class="form-row"><label>🛠️ Навыки (через ,)</label><textarea id="skills" rows="2" placeholder="HTML, CSS, JS, React, Git"></textarea></div>
+            <div class="form-row"><label>💼 Опыт</label><textarea id="experience" rows="2" placeholder="2026: создание Skymipe Market"></textarea></div>
+            <div class="form-row"><label>🌍 Языки</label><input type="text" id="languages" placeholder="Русский, Английский (B1)"></div>
+            <div class="form-row"><label>🔗 Сайт / GitHub</label><input type="text" id="social" placeholder="github.com/damir"></div>
+            <div class="form-row"><label>📞 Телефон</label><input type="text" id="phone" placeholder="+7 996 587 07 55"></div>
+            <div class="form-row"><label>✉️ Email</label><input type="email" id="email" placeholder="damir@skymipe.com"></div>
+            <div class="form-row"><label>🖼️ Аватар (URL)</label><input type="text" id="avatarUrl" placeholder="https://..."></div>
+            <button id="genBtn">✨ СОЗДАТЬ РЕЗЮМЕ</button>
+        </div>
+
+        <div class="preview-area">
+            <h3 style="margin-bottom:0.8rem; color:#c0e0ff;">📡 ГОТОВЫЙ ВАРИАНТ</h3>
+            <div id="resumePreview" class="preview-card">
+                <p style="color:#6f9bcb;">Заполните форму слева</p>
+            </div>
+            <button id="pdfBtn" style="background:#1e3a5f;">💾 СОХРАНИТЬ КАК PDF (ПЕЧАТЬ)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function escape(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function (m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function updateResume() {
+        const name = document.getElementById("fullName").value.trim();
+        const title = document.getElementById("jobTitle").value.trim();
+        if (!name || !title) {
+            document.getElementById("resumePreview").innerHTML = '<p style="color:#6f9bcb;">❌ Заполните имя и должность</p>';
+            return;
+        }
+        const edu = document.getElementById("education").value.trim();
+        const skillsRaw = document.getElementById("skills").value.trim();
+        const exp = document.getElementById("experience").value.trim();
+        const langs = document.getElementById("languages").value.trim();
+        const social = document.getElementById("social").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const avatar = document.getElementById("avatarUrl").value.trim();
+
+        let skillsHtml = "";
+        if (skillsRaw) {
+            const arr = skillsRaw.split(",").map(s => s.trim()).filter(s => s);
+            skillsHtml = "<ul style='margin-left:20px;'>" + arr.map(s => `<li>${escape(s)}</li>`).join("") + "</ul>";
+        }
+        let avatarHtml = (avatar && (avatar.startsWith("http") || avatar.startsWith("data:")))
+            ? `<img src="${escape(avatar)}" class="avatar-preview" onerror="this.style.display='none'">`
+            : `<div class="avatar-preview" style="background:#1e2a3a; display:flex; align-items:center; justify-content:center;">👨‍🚀</div>`;
+
+        const finalHtml = `
+            ${avatarHtml}
+            <h2 style="color:#c0e0ff; text-align:center;">${escape(name)}</h2>
+            <p style="text-align:center; font-weight:bold;">${escape(title)}</p>
+            ${edu ? `<p><strong>🎓 Образование:</strong> ${escape(edu)}</p>` : ""}
+            ${skillsRaw ? `<div><strong>🛠️ Навыки:</strong> ${skillsHtml}</div>` : ""}
+            ${exp ? `<div><strong>💼 Опыт:</strong><br>${escape(exp).replace(/\n/g, "<br>")}</div>` : ""}
+            ${langs ? `<p><strong>🌍 Языки:</strong> ${escape(langs)}</p>` : ""}
+            ${social ? `<p><strong>🔗 Сайт:</strong> <a href="${escape(social)}" target="_blank" style="color:#8ab3ff;">${escape(social)}</a></p>` : ""}
+            ${phone || email ? `<hr><p><strong>📞 Контакты:</strong><br>${phone ? "📱 " + escape(phone) : ""}${phone && email ? "<br>" : ""}${email ? "✉️ " + escape(email) : ""}</p>` : ""}
+        `;
+        document.getElementById("resumePreview").innerHTML = finalHtml;
+    }
+
+    function downloadAsPDF() {
+        const element = document.getElementById("resumePreview");
+        if (element.innerText.includes("Заполните форму")) {
+            alert("Сначала создайте резюме, нажав «СОЗДАТЬ РЕЗЮМЕ»");
+            return;
+        }
+        const originalTitle = document.title;
+        document.title = "resume_skymipe";
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>resume_skymipe</title>
+                <style>
+                    body { font-family: 'Inter', system-ui; padding: 2rem; }
+                    .avatar-preview { width: 100px; border-radius: 50%; }
+                    ul { margin-left: 20px; }
+                    hr { margin: 1rem 0; }
+                </style>
+            </head>
+            <body>${element.innerHTML}</body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+        document.title = originalTitle;
+    }
+
+    document.getElementById("genBtn").addEventListener("click", updateResume);
+    document.getElementById("pdfBtn").addEventListener("click", downloadAsPDF);
+</script>
+</body>
+</html>
